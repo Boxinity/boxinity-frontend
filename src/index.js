@@ -4,5 +4,5 @@ import App from "./components/App";
 import LinkRouter from "./router";
 import registerServiceWorker from "./registerServiceWorker";
 
-ReactDOM.render(LinkRouter(App), document.getElementById("root"));
+ReactDOM.render(LinkRouter(), document.getElementById("root"));
 registerServiceWorker();

@@ -30,14 +30,12 @@ class App extends Component {
 
   // 회원가입 수행
   onClickJoin() {
-    console.log(this.state);
     axios.post(`${API_URL}/users/`, {
       username: this.state.username,
       password: this.state.password,
       email: this.state.email,
     }).then(res => {
       const user = res.data;
-      console.log("user", user);
       // 회원가입 성공
       this.setUser(user);
       this.clearJoinInfos();
@@ -72,14 +70,18 @@ class App extends Component {
       password: this.state.password,
     }).then(res => {
       const user = res.data;
-      // 회원가입 성공
+      // 로그인 성공
       this.setUser(user);
       this.clearJoinInfos();
     }).catch(error => {
       if (error.response) {
         const data = error.response.data;
-        // 회원가입 실패. 실패 메시지 저장
+        // 로그인 실패
         let errMsg = "";
+
+        if (data.non_field_errors) {
+          errMsg += "Errors:" + data.non_field_errors.join(", ") + "\n";
+        }
 
         if (data.username) {
           errMsg += "UserName:" + data.username.join(", ") + "\n";
@@ -137,7 +139,6 @@ class App extends Component {
   }
 
   logout() {
-    console.log("Logout!");
     this.setState({user: null});
   }
 

@@ -5,7 +5,6 @@ import {
   FormGroup,
   ControlLabel,
   FormControl,
-  HelpBlock,
   ButtonToolbar,
   Button,
   Alert,
@@ -50,9 +49,6 @@ const Login = ({
             placeholder="Enter User Name"
             onChange={onChangeUsername}
           />
-
-          <FormControl.Feedback />
-          <HelpBlock>Validation is based on string length.</HelpBlock>
         </FormGroup>
 
         <FormGroup
@@ -67,9 +63,6 @@ const Login = ({
             placeholder="Enter Password"
             onChange={onChangePassword}
           />
-
-          <FormControl.Feedback />
-          <HelpBlock>Validation is based on string length.</HelpBlock>
         </FormGroup>
 
         {
@@ -85,9 +78,6 @@ const Login = ({
               placeholder="Enter Email"
               onChange={onChangeEmail}
             />
-
-            <FormControl.Feedback />
-            <HelpBlock>Validation is based on string length.</HelpBlock>
           </FormGroup>
         }
 

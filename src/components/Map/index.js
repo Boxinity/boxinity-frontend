@@ -6,10 +6,12 @@ import MapContainer from "./MapContainer";
 
 class Map extends Component {
   render() {
+    const { user } = this.props;
+
     return (
       <div>
         <h1> Boxinity </h1>
-        <MapContainer google={this.props.google} />
+        <MapContainer user={user} google={this.props.google} />
       </div>
     );
   }

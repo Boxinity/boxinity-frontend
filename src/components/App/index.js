@@ -164,7 +164,7 @@ class App extends Component {
             onClickLogin={this.onClickLogin}
             toggleWannaJoin={this.toggleWannaJoin}
           />}
-        { user && <Map />}
+        { user && <Map user={user} />}
       </div>
     );
   }

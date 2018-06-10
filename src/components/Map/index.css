@@ -1,0 +1,7 @@
+.chatroom-messages {
+  padding: 0px, 1rem;
+  min-height: 450px;
+  max-height: 450px;
+  overflow: scroll;
+  scroll-behavior: smooth;
+}

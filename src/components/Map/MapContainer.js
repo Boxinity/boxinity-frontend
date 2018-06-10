@@ -2,6 +2,23 @@ import React, {Component} from "react";
 import {Map} from "google-maps-react";
 import {Modal, Button, FormGroup, ControlLabel, FormControl} from "react-bootstrap";
 
+import Message from "../Message";
+
+import "./index.css";
+
+const sampleMessages = [
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "TestUserName", message: "ESE"},
+  {username: "SS", message: "ESE"},
+  {username: "TestUserName", message: "ESE"},
+];
+
 export default class MapContainer extends Component {
   constructor (props) {
     super(props);
@@ -12,13 +29,21 @@ export default class MapContainer extends Component {
     this.setMap = this.setMap.bind(this);
     this.addMarker = this.addMarker.bind(this);
     this.getBoxes = this.getBoxes.bind(this);
+    this.onChangeNewMessage = this.onChangeNewMessage.bind(this);
+    this.onClickNewMessage = this.onClickNewMessage.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
 
     this.state = {
       makeModalShow : false,
       enterModalShow : false,
+      chatroomModalShow : false,
       map : "",
       ChatRoomName : "",
-      latLng : ""
+      latLng : "",
+
+      // chat room info
+      chatroomMessages: [], // 이전 메시지들. [{username: String, message: String}]
+      newMessage: "" // 새로 작성한 메시지
     };
   }
 
@@ -69,7 +94,10 @@ export default class MapContainer extends Component {
     this.setState({
       makeModalShow : false,
       enterModalShow : false,
-      ChatRoomName : ""
+      chatroomModalShow: false,
+      ChatRoomName : "",
+      chatroomMessages: [],
+      newMessage: "",
     });
   }
 
@@ -128,6 +156,35 @@ export default class MapContainer extends Component {
 
   handleEnter () {
     //enter chatroom
+    this.setState({
+      chatroomModalShow: true,
+      chatroomMessages: sampleMessages, // TODO: use empty array if server implemented
+      // chatroomMessages: [],
+      newMessage: ""
+    });
+
+    // TODO: get chat room messages from server
+  }
+
+  // chat room handers
+  onChangeNewMessage(e) {
+    this.setState({newMessage: e.target.value});
+  }
+
+  onClickNewMessage() {
+    const username = this.props.user ? this.props.user.username : "TestUserName";
+
+    console.log(this.state.chatroomMessages);
+
+    // TODO: post to server
+
+    this.setState({
+      chatroomMessages: [...this.state.chatroomMessages, { // append new message
+        username: username,
+        message: this.state.newMessage,
+      }],
+      newMessage: "",
+    });
   }
 
   render() {
@@ -135,6 +192,9 @@ export default class MapContainer extends Component {
       width: "100%",
       height: "100%"
     };
+
+    const user = this.props.user || {username: "TestUserName"};
+    const { chatroomMessages, newMessage } = this.state;
 
     return (
       <div>
@@ -199,6 +259,41 @@ export default class MapContainer extends Component {
             <Modal.Footer>
               <Button onClick={this.handleEnter}>Yes</Button>
               <Button onClick={this.handleHide}>No</Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal
+            show={this.state.chatroomModalShow}
+            onHide={this.handleHide}
+            container={this}
+            aria-labelledby="contained-modal-title"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title id="contained-modal-title">
+                <h2>ChatRoom: {this.state.ChatRoomName}</h2>
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ol className="chatroom-messages">
+                {
+                  chatroomMessages.map(({username, message}, i) =>
+                    <Message key={i} user={user} username={username} message={message} />
+                  )
+                }
+              </ol>
+            </Modal.Body>
+            <Modal.Footer>
+              <div style={{display: "inline"}}>
+                <FormControl
+                  type="text"
+                  value={newMessage}
+                  placeholder="Enter text"
+                  onChange={this.onChangeNewMessage}
+                />
+
+                <Button bsStyle="info" onClick={this.onClickNewMessage}>Post</Button>
+              </div>
+
             </Modal.Footer>
           </Modal>
         </div>

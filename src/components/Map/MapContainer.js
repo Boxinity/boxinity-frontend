@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Map} from 'google-maps-react';
+import React, {Component} from "react";
+import {Map} from "google-maps-react";
 import {Modal, Button, FormGroup, ControlLabel, FormControl} from "react-bootstrap";
 
 export default class MapContainer extends Component {
@@ -16,15 +16,15 @@ export default class MapContainer extends Component {
     this.state = {
       makeModalShow : false,
       enterModalShow : false,
-      map : '',
-      ChatRoomName : '',
-      latLng : ''
-    }
+      map : "",
+      ChatRoomName : "",
+      latLng : ""
+    };
   }
 
   //continuous update
   setMap (mapProps, map) {
-    this.setState({map : map})
+    this.setState({map : map});
     this.continuousBoxUpdate();
   }
 
@@ -37,20 +37,20 @@ export default class MapContainer extends Component {
     var self = this;
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:8000/api/box/?format=json')
+    xhr.open("GET", "http://localhost:8000/api/box/?format=json");
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         var boxes = JSON.parse(xhr.responseText);
 
         boxes.forEach((box) => {
           var latLng = new google.maps.LatLng(box.latitude,box.longtitude);
-          self.addMarker(box.name, latLng)
-        })
+          self.addMarker(box.name, latLng);
+        });
       }
-    }
+    };
 
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send()
+    xhr.send();
   }
 
 
@@ -69,7 +69,7 @@ export default class MapContainer extends Component {
     this.setState({
       makeModalShow : false,
       enterModalShow : false,
-      ChatRoomName : ''
+      ChatRoomName : ""
     });
   }
 
@@ -77,22 +77,22 @@ export default class MapContainer extends Component {
 
     this.setState({
       makeModalShow : false,
-      ChatRoomName : ''
+      ChatRoomName : ""
     });
 
     //add markers to server
-    this.addBox(this.state.ChatRoomName, this.state.latLng.lat(), this.state.latLng.lng())
+    this.addBox(this.state.ChatRoomName, this.state.latLng.lat(), this.state.latLng.lng());
   }
 
   addBox (name, lat, lng) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:8000/api/box/')
+    xhr.open("POST", "http://localhost:8000/api/box/");
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        this.getBoxes()
+        this.getBoxes();
       }
-    }
+    };
 
     xhr.setRequestHeader("Content-Type", "application/json");
     var boxInfo = {
@@ -102,9 +102,9 @@ export default class MapContainer extends Component {
       longtitude : lng,
       chatting_url : "chatting_url",
       user : ["1"]
-    }
+    };
 
-    xhr.send(JSON.stringify(boxInfo))
+    xhr.send(JSON.stringify(boxInfo));
   }
 
   addMarker (name, position) {
@@ -117,12 +117,12 @@ export default class MapContainer extends Component {
       map : this.state.map
     });
 
-    marker.addListener('click', function() {
+    marker.addListener("click", function() {
 
       self.setState({
         enterModalShow : true,
         ChatRoomName : marker.name
-      })
+      });
     });
   }
 
@@ -132,9 +132,9 @@ export default class MapContainer extends Component {
 
   render() {
     const mapStyle = {
-      width: '100%',
-      height: '100%'
-    }
+      width: "100%",
+      height: "100%"
+    };
 
     return (
       <div>

@@ -13,6 +13,7 @@ export default class MapContainer extends Component {
     this.handleChatRoomName = this.handleChatRoomName.bind(this);
     this.setMap = this.setMap.bind(this);
     this.addMarker = this.addMarker.bind(this);
+    this.getBoxes = this.getBoxes.bind(this);
 
     this.state = {
       makeModalShow : false,
@@ -26,9 +27,34 @@ export default class MapContainer extends Component {
   //continuous update
   setMap (mapProps, map) {
     this.setState({map : map})
-
-    //add markers in server
+    this.continuousBoxUpdate();
   }
+
+  continuousBoxUpdate () {
+    setInterval(() => this.getBoxes(), 1000);
+  }
+
+  getBoxes() {
+    var google = this.props.google;
+    var self = this;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost:8000/api/box/?format=json')
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var boxes = JSON.parse(xhr.responseText);
+
+        boxes.forEach((box) => {
+          var latLng = new google.maps.LatLng(box.latitude,box.longtitude);
+          self.addMarker(box.name, latLng)
+        })
+      }
+    }
+
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send()
+  }
+
 
   onMapClicked (mapProps, map, clickEvent) {
     this.setState({
@@ -50,13 +76,36 @@ export default class MapContainer extends Component {
   }
 
   handleMake () {
+
     this.setState({
       makeModalShow : false,
       ChatRoomName : ''
     });
 
     //add markers to server
-    this.addMarker(this.state.ChatRoomName, this.state.latLng)
+    this.addBox(this.state.ChatRoomName, this.state.latLng.lat(), this.state.latLng.lng())
+  }
+
+  addBox (name, lat, lng) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://localhost:8000/api/box/')
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        this.getBoxes()
+      }
+    }
+
+    xhr.setRequestHeader("Content-Type", "application/json");
+    var boxInfo = {
+      name : name,
+      detail : "detail",
+      latitude : lat,
+      longtitude : lng,
+      chatting_url : "chatting_url"
+    }
+
+    xhr.send(JSON.stringify(boxInfo))
   }
 
   addMarker (name, position) {
@@ -64,12 +113,13 @@ export default class MapContainer extends Component {
     var google = this.props.google;
 
     var marker = new google.maps.Marker({
-      position: this.state.latLng,
-      name : this.state.ChatRoomName,
+      position: position,
+      name : name,
       map : this.state.map
     });
 
     marker.addListener('click', function() {
+
       self.setState({
         enterModalShow : true,
         ChatRoomName : marker.name

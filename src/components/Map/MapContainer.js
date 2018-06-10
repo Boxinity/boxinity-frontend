@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {Map} from 'google-maps-react';
 import {Modal, Button, FormGroup, ControlLabel, FormControl} from "react-bootstrap";
 
-//docker django container ip
-var djangoIp = "172.19.0.12";
-
 export default class MapContainer extends Component {
   constructor (props) {
     super(props);
@@ -41,7 +38,7 @@ export default class MapContainer extends Component {
     var self = this;
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://' + djangoIp + ':8000/api/box/?format=json')
+    xhr.open('GET', 'http://localhost:8000/api/box/?format=json')
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         var boxes = JSON.parse(xhr.responseText);
@@ -91,7 +88,7 @@ export default class MapContainer extends Component {
   addBox (name, lat, lng) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://' + djangoIp + ':8000/api/box/')
+    xhr.open('POST', 'http://localhost:8000/api/box/')
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         this.getBoxes()
@@ -104,7 +101,8 @@ export default class MapContainer extends Component {
       detail : "detail",
       latitude : lat,
       longtitude : lng,
-      chatting_url : "chatting_url"
+      chatting_url : "chatting_url",
+      user : ["1"]
     }
 
     xhr.send(JSON.stringify(boxInfo))

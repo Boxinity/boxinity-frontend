@@ -30,7 +30,6 @@ export default class MapContainer extends Component {
 
   continuousBoxUpdate () {
     setInterval(() => this.getBoxes(), 1000);
-    console.log(djangoIp)
   }
 
   getBoxes() {

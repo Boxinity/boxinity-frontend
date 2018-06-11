@@ -35,7 +35,10 @@ class App extends Component {
       password: this.state.password,
       email: this.state.email,
     }).then(res => {
-      const user = res.data;
+      const user = {
+        ...this.state,
+        ...res.data
+      };
       // 회원가입 성공
       this.setUser(user);
       this.clearJoinInfos();
@@ -69,7 +72,10 @@ class App extends Component {
       username: this.state.username,
       password: this.state.password,
     }).then(res => {
-      const user = res.data;
+      const user = {
+        ...this.state,
+        ...res.data
+      };
       // 로그인 성공
       this.setUser(user);
       this.clearJoinInfos();
@@ -145,6 +151,7 @@ class App extends Component {
 
   render () {
     const { user, username, password, email, errorMsg, wannaJoin } = this.state;
+    console.log("App", user);
 
     return (
       <div className="App">

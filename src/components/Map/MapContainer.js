@@ -174,7 +174,6 @@ export default class MapContainer extends Component {
   onClickNewMessage() {
     const username = this.props.user ? this.props.user.username : "TestUserName";
 
-    console.log(this.state.chatroomMessages);
 
     // TODO: post to server
 
@@ -193,8 +192,8 @@ export default class MapContainer extends Component {
       height: "100%"
     };
 
-    const user = this.props.user || {username: "TestUserName"};
     const { chatroomMessages, newMessage } = this.state;
+    const { user } = this.props;
 
     return (
       <div>
